@@ -15,6 +15,13 @@ Home:
           ansible_host: 192.168.100.3
         Upstairs_Switch:
           ansible_host: 192.168.100.4
+    vars:
+        # Essential connection variables for Cisco IOS devices in this group
+        ansible_network_os: cisco.ios.ios
+        ansible_connection: ansible.netcommon.network_cli
+        ansible_become: true
+        ansible_become_method: enable
+        ansible_ssh_extra_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1'
 
 vars:
   ansible_network_os: cisco.ios.ios
@@ -22,4 +29,4 @@ vars:
   ansible_become: yes
   ansible_become_method: enable
   ansible_user: chris
-  ansible_ssh_common_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1'
+  ansible_ssh_extra_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1'
