@@ -7,7 +7,6 @@ all: # Use 'all' as the standard top-level group
     ansible_become: true # Use true/false in YAML
     ansible_become_method: enable
     ansible_user: chris # Define username once if it's the same for all
-    ansible_ssh_extra_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1'
 
   children: # Define groups under 'children'
     Core_Layer:
@@ -20,9 +19,6 @@ all: # Use 'all' as the standard top-level group
       hosts:
         Agg_Switch:
           ansible_host: 192.168.100.2
-      vars:
-        # Add KEX fix specifically for this group if needed
-        ansible_ssh_extra_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1'
 
     Access_Layer:
       hosts:
@@ -30,6 +26,3 @@ all: # Use 'all' as the standard top-level group
           ansible_host: 192.168.100.3
         Upstairs_Switch:
           ansible_host: 192.168.100.4
-      vars:
-        # Add KEX fix specifically for this group
-        ansible_ssh_extra_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1'
