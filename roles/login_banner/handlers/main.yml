@@ -3,6 +3,6 @@
 
 - name: Save ios.
   cisco.ios.ios_config:
-    save_when: modified
+    save_when: changed
   when: not ansible_check_mode
 
