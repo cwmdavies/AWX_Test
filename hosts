@@ -1,32 +1,34 @@
 ---
-Home:
-  children:
+all: # Use 'all' as the standard top-level group
+  vars: # Variables applied to ALL hosts below
+    # Common connection settings
+    ansible_network_os: cisco.ios.ios
+    ansible_connection: ansible.netcommon.network_cli
+    ansible_become: true # Use true/false in YAML
+    ansible_become_method: enable
+    ansible_user: chris # Define username once if it's the same for all
+
+  children: # Define groups under 'children'
     Core_Layer:
       hosts:
         Router:
           ansible_host: 192.168.100.1
+      # No specific vars here, inherits from 'all'
+
     Distribution_Layer:
       hosts:
         Agg_Switch:
           ansible_host: 192.168.100.2
+      vars:
+        # Add KEX fix specifically for this group if needed
+        ansible_ssh_extra_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1' # Only list algs Agg_Switch offers if different
+
     Access_Layer:
       hosts:
         Office_Switch:
           ansible_host: 192.168.100.3
         Upstairs_Switch:
           ansible_host: 192.168.100.4
-    vars:
-        # Essential connection variables for Cisco IOS devices in this group
-        ansible_network_os: cisco.ios.ios
-        ansible_connection: ansible.netcommon.network_cli
-        ansible_become: true
-        ansible_become_method: enable
-        ansible_ssh_extra_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1'
-
-vars:
-  ansible_network_os: cisco.ios.ios
-  ansible_connection: ansible.netcommon.network_cli
-  ansible_become: yes
-  ansible_become_method: enable
-  ansible_user: chris
-  ansible_ssh_extra_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1'
+      vars:
+        # Add KEX fix specifically for this group
+        ansible_ssh_extra_args: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1' # List all algs needed by these hosts
