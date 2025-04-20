@@ -1,0 +1,8 @@
+---
+# handlers file for interface_descriptions
+
+- name: Save ios.
+  cisco.ios.ios_config:
+    save_when: always
+  when: not ansible_check_mode
+

@@ -1,0 +1,28 @@
+---
+# This playbook sets a login banner on Cisco IOS devices using Ansible.
+# It uses the cisco.ios.ios_banner module to configure the banner text.
+
+# This ensures that the variables are pulled in from the main playbook.
+- name: Gather facts explicitly
+  ansible.builtin.setup:
+
+# This task sets a login banner on Cisco IOS devices
+- name: "Set Login banner"
+  cisco.ios.ios_banner:
+    banner: login
+    text: |
+      ########################################################################################################
+      #                                                                                                      #
+      #               Unauthorized access to this device is prohibited.                                      #
+      #               You must have explicit permission to access or configure this device.                  #
+      #               All activities performed on this device are logged and monitored.                      #
+      #               For any issues, please contact your system administrator.                              #
+      #                                                                                                      #
+      ########################################################################################################
+
+      - Hostname: WM_Office-Rtr
+      - Domain: weavermanor.co.uk
+      - Line: 1
+
+    state: present
+    notify: "Save ios."
