@@ -2,10 +2,6 @@
 # This playbook sets a login banner on Cisco IOS devices using Ansible.
 # It uses the cisco.ios.ios_banner module to configure the banner text.
 
-# This ensures that the variables are pulled in from the main playbook.
-- name: Gather facts explicitly
-  ansible.builtin.setup:
-
 # This task sets a login banner on Cisco IOS devices
 - name: "Set Login banner"
   cisco.ios.ios_banner:
