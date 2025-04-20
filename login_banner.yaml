@@ -2,7 +2,5 @@
 - name: "Create Login Banner"
   hosts: Home
   gather_facts: no
-  vars_files:
-    ~/Ansible/vault/secrets.yaml
   roles:
     - role: login_banner
