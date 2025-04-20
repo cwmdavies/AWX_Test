@@ -22,4 +22,4 @@ vars:
   ansible_become: yes
   ansible_become_method: enable
   ansible_user: chris
-  ansible_ssh_common_args: "-o KexAlgorithms=+diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1"
+  ansible_ssh_common_args: '-o KexAlgorithms=curve25519-sha256@libssh.org,ecdh-sha2-nistp256 -o HostKeyAlgorithms=ssh-rsa'
