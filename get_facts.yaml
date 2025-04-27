@@ -1,9 +1,9 @@
 ---
-tasks:
-  - name: "Displaying Facts"
-    hosts: Home
-    gather_facts: no
+- name: "Displaying Facts"
+  hosts: Home
+  gather_facts: no
 
+tasks:
   - name: "Display some facts"
     ansible.builtin.debug:
       msg:
