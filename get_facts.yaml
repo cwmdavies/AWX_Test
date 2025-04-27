@@ -2,5 +2,9 @@
 - name: "Displaying Facts"
   hosts: Home
   gather_facts: no
-  roles:
-    - role: get_facts
+
+- name: "Display some facts"
+  ansible.builtin.debug:
+    msg:
+      - "The hostname descovered by ZTP is: {{ ztp_hostname }}"
+      - "The IP Address descovered by ZTP is: {{ ztp_ip_address }}"
