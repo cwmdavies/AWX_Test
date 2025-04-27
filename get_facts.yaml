@@ -3,9 +3,9 @@
   hosts: Home
   gather_facts: no
 
-tasks:
-  - name: "Display some facts"
-    ansible.builtin.debug:
-      msg:
-        - "The hostname descovered by ZTP is: {{ ztp_hostname }}"
-        - "The IP Address descovered by ZTP is: {{ ztp_ip_address }}"
+  tasks:
+    - name: "Display some facts"
+      ansible.builtin.debug:
+        msg:
+          - "The hostname descovered by ZTP is: {{ ztp_hostname }}"
+          - "The IP Address descovered by ZTP is: {{ ztp_ip_address }}"
