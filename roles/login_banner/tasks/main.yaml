@@ -1,24 +1,7 @@
 ---
-# This playbook sets a login banner on Cisco IOS devices using Ansible.
-# It uses the cisco.ios.ios_banner module to configure the banner text.
-
-# This task sets a login banner on Cisco IOS devices
-- name: "Set Login banner"
-  cisco.ios.ios_banner:
-    banner: login
-    text: |
-      ########################################################################################################
-      #                                                                                                      #
-      #               Unauthorized access to this device is prohibited.                                      #
-      #               You must have explicit permission to access or configure this device.                  #
-      #               All activities performed on this device are logged and monitored.                      #
-      #               For any issues, please contact your system administrator.                              #
-      #                                                                                                      #
-      ########################################################################################################
-
-      - Hostname: WM_Office-Rtr
-      - Domain: weavermanor.co.uk
-      - Line: 1
-
-    state: present
-  notify: "Save ios."
+- name: "Display some facts"
+  ansible.builtin.debug:
+    msg:
+      - "The hostname is {{ ansible_net_hostname }} and the OS is {{ ansible_net_version }}"
+      - "The hostname descovered by ZTP is: {{ ztp_hostname }}"
+      - "The IP Address descovered by ZTP is: {{ ztp_ip_address }}"
