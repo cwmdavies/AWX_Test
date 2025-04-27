@@ -1,14 +1,7 @@
 ---
-
-# This task ensures the variables are pulled in from the main playbook.
-- name: "Gather facts explicitly"
-  ansible.builtin.setup:
   
 - name: "Display some facts"
   ansible.builtin.debug:
     msg:
-      - "The hostname is {{ ansible_net_hostname }} and the OS is {{ ansible_net_version }}"
       - "The hostname descovered by ZTP is: {{ ztp_hostname }}"
       - "The IP Address descovered by ZTP is: {{ ztp_ip_address }}"
-
-
