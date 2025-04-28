@@ -1,7 +1,11 @@
 ---
-  
 - name: "Display some facts"
+  gather_facts: no
   ansible.builtin.debug:
     msg:
+      - "Hostname: {{ ansible_net_hostname }}
+      - "Version: {{ ansible_net_version }}
+      - "Model: {{ ansible_net_model }}
+      - "Serial: {{ ansible_net_serialnum }}
       - "The hostname descovered by ZTP is: {{ ztp_hostname }}"
       - "The IP Address descovered by ZTP is: {{ ztp_ip_address }}"
