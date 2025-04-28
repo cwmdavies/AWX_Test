@@ -1,6 +1,6 @@
 ---
 - name: "Displaying Facts"
   hosts: Home
-  gather_facts: no
+  gather_facts: yes
   roles:
     - role: get_facts
