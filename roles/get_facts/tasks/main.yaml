@@ -1,6 +1,9 @@
 ---
-- name: "Display some facts"
-  gather_facts: no
+# This task ensures the variables are pulled in from the main playbook.
+- name: Gather facts explicitly
+  ansible.builtin.setup:
+  
+- name: Display some facts
   ansible.builtin.debug:
     msg:
       - "Hostname: {{ ansible_net_hostname }}"
