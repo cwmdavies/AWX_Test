@@ -1,6 +1,6 @@
 ---
 - name: "Create Login Banner"
-  hosts: Home
+  hosts: all
   gather_facts: no
   roles:
     - role: login_banner
