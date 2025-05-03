@@ -1,0 +1,28 @@
+---
+all: # Use 'all' as the standard top-level group
+  vars: # Variables applied to ALL hosts below
+    # Common connection settings
+    ansible_network_os: cisco.ios.ios
+    ansible_connection: ansible.netcommon.network_cli
+    ansible_become: true # Use true/false in YAML
+    ansible_become_method: enable
+    ansible_user: chris # Define username once if it's the same for all
+
+  children: # Define groups under 'children'
+    Core_Layer:
+      hosts:
+        Router:
+          ansible_host: 192.168.100.1
+      # No specific vars here, inherits from 'all'
+
+    Distribution_Layer:
+      hosts:
+        Agg_Switch:
+          ansible_host: 192.168.100.2
+
+    Access_Layer:
+      hosts:
+        Office_Switch:
+          ansible_host: 192.168.100.3
+        Upstairs_Switch:
+          ansible_host: 192.168.100.4
