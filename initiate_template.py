@@ -2,27 +2,18 @@ import http.client
 import json
 import ssl
 import os
-import socket # For setting timeout
+import re
+import cli
+import socket
 
 # --- Configuration ---
-AWX_HOST_SOCKET = "localhost:8080"
+AWX_HOST_SOCKET = "192.168.1.116:30443"
 AWX_SCHEME = "http" # Change to "https" for production AWX
-
-# API endpoint to launch the specific job template
-# Replace '10' with your actual Job Template ID
 AWX_ENDPOINT = "/api/v2/job_templates/16/launch/" # Ensure trailing slash if API requires it
-API_TOKEN = "zmHYcjePB6okgjOTDSzO5JBk5W2WKC"
-payload_data = {
-    "extra_vars": {
-        "ztp_hostname": "test_hostname",
-        "ztp_ip_address": "10.1.1.5"
-    }
-}
-
-
+API_TOKEN = "zmHYcjePB6okgjOTDSzO5JBk5W2WKC" # Use an API token which only has job execution rights.
 VERIFY_SSL = False
-# Connection Timeout in seconds
 CONNECTION_TIMEOUT = 30
+
 
 # --- Script Logic ---
 
@@ -125,9 +116,29 @@ def launch_awx_job(host_socket, scheme, endpoint, token, payload, verify_ssl=Tru
             conn.close()
             print("Connection closed.")
 
+def get_ip_address()
+    output = cli.execute("show ip interface brief | include Vlan100")
+    match = re.search(r"\d+\.\d+\.\d+\.\d+", output)
+
+    if match:
+        ip_address = match.group()
+        print(f"IP Address for Management VLAN is: {ip_address}")
+        return ip_address
+    else:
+        print("IP Address not found.")
+        return "IP Address not found!"
+
 # --- Main Execution ---
 if __name__ == "__main__":
 
+    IP_Address = get_ip_address
+    payload_data = {
+        "extra_vars": {
+            "ztp_hostname": "test_hostname",
+            "ztp_ip_address": IP_Address
+    }
+}
+    
     # Make the API call
     success, result = launch_awx_job(
         AWX_HOST_SOCKET,
