@@ -1,0 +1,32 @@
+---
+version: 3
+
+images:
+  base_image:
+    # Revert to CentOS Stream 10 base image (publicly accessible, stable)
+    name: quay.io/centos/centos:stream10
+
+dependencies:
+  # Explicitly install ansible-core compatible with Python 3.9 (in base image)
+  ansible_core:
+    package_pip: ansible-core
+
+  # Explicitly install ansible-runner via pip
+  ansible_runner:
+    package_pip: ansible-runner
+
+  # Remove explicit python_interpreter path - let builder use default /usr/bin/python3
+  # python_interpreter:
+  #   python_path: /usr/local/bin/python3
+
+  python: requirements.txt
+  galaxy: requirements.yml
+  system: bindep.txt # Use RHEL/CentOS package names here
+
+additional_build_steps:
+  # Remove dummy dnf, apt installs, etc. from previous attempts
+  # Keep only the crypto policy step
+  prepend_final: |
+    RUN update-crypto-policies --set LEGACY
+    RUN echo "System crypto policy set to LEGACY." && \
+        update-crypto-policies --show | grep -q LEGACY || exit 1
