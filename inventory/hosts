@@ -19,10 +19,13 @@ all: # Use 'all' as the standard top-level group
       hosts:
         Agg_Switch:
           ansible_host: 192.168.100.2
+          serial_number: 
 
     Access_Layer:
       hosts:
         Office_Switch:
           ansible_host: 192.168.100.3
+          serial_number: 
         Upstairs_Switch:
           ansible_host: 192.168.100.4
+          serial_number: 
