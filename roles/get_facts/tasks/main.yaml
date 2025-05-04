@@ -10,3 +10,6 @@
       - "Version: {{ ansible_net_version }}"
       - "Model: {{ ansible_net_model }}"
       - "Serial: {{ ansible_net_serialnum }}"
+
+      - "ZTP Hostname: {{ ztp_hostname }}"
+      - "ZTP IP Address: {{ ztp_ip_address }}"
