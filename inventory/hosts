@@ -13,7 +13,7 @@ all: # Use 'all' as the standard top-level group
       hosts:
         Router:
           ansible_host: 192.168.100.1
-      # No specific vars here, inherits from 'all'
+          serial_number: FCZ2638R2LQ
 
     Distribution_Layer:
       hosts:
