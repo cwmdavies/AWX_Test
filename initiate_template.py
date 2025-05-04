@@ -9,8 +9,8 @@ import socket
 # --- Configuration ---
 AWX_HOST_SOCKET = "192.168.1.116:30443"
 AWX_SCHEME = "http" # Change to "https" for production AWX
-AWX_ENDPOINT = "/api/v2/job_templates/16/launch/" # Ensure trailing slash if API requires it
-API_TOKEN = "zmHYcjePB6okgjOTDSzO5JBk5W2WKC" # Use an API token which only has job execution rights.
+AWX_ENDPOINT = "/api/v2/job_templates/11/launch/" # Ensure trailing slash if API requires it
+API_TOKEN = "dEUuqVGy7LBxAsW2JTH3gQFqZO4qeY" # Use an API token which only has job execution rights.
 VERIFY_SSL = False
 CONNECTION_TIMEOUT = 30
 
