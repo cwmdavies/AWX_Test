@@ -1,6 +1,6 @@
 ---
 - name: "Displaying Facts"
-  hosts: all
+  hosts: Router
   gather_facts: yes
   roles:
     - role: get_facts
