@@ -8,7 +8,7 @@
   # typically passed from the ZTP script's API call payload.
   # 'ztp_inventory_name' is the exact name of your ZTP inventory in AWX.
   vars:
-    switch_ip: "{{ switch_ip_address | default(omit) }}" # Use default(omit) if not passed, but we need it
+    switch_ip: "{{ 192.168.100.50 | default(omit) }}" # Use default(omit) if not passed, but we need it
     ztp_inventory_name: "ZTP Inventory" # <-- IMPORTANT: Change this to your exact inventory name
 
     # AWX/Tower API connection details.
