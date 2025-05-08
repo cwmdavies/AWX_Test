@@ -4,9 +4,6 @@
   gather_facts: false
   connection: local
 
-  vars:
-    ztp_inventory_name: "ZTP Inventory"
-
   tasks:
     - name: Add the new switch IP to the ZTP inventory
       awx.awx.host:
