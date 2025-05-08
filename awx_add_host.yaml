@@ -3,23 +3,9 @@
   gather_facts: false
   connection: local
 
-  # Define expected extra variables.
-  # 'switch_ip' should be provided when launching the job template,
-  # typically passed from the ZTP script's API call payload.
-  # 'ztp_inventory_name' is the exact name of your ZTP inventory in AWX.
   vars:
-    switch_ip: "{{ 192.168.100.50 | default(omit) }}" # Use default(omit) if not passed, but we need it
-    ztp_inventory_name: "ZTP Inventory" # <-- IMPORTANT: Change this to your exact inventory name
-
-    # AWX/Tower API connection details.
-    # It's highly recommended to use an AWX Credential Type
-    # (like 'Ansible Tower') instead of hardcoding these.
-    # Assign the credential to the Job Template in AWX.
-    # tower_host: "https://your-awx-url" # Usually handled by AWX credential
-    # tower_username: "your-awx-user"   # Usually handled by AWX credential
-    # tower_password: "your-awx-password" # Usually handled by AWX credential
-    # tower_oauthtoken: "your-awx-token" # Alternative via AWX credential
-    # tower_verify_ssl: true             # Set to false if using self-signed certs (not recommended for production)
+    switch_ip: "192.168.100.50"
+    ztp_inventory_name: "ZTP Inventory"
 
   tasks:
     - name: Fail if switch_ip is not provided
@@ -33,22 +19,13 @@
       when: ztp_inventory_name is not defined or ztp_inventory_name == ""
 
     - name: Add the new switch IP to the ZTP inventory
-      awx.awx.host: # Or ansible.tower.host depending on your collection/version
-        name: "{{ switch_ip }}" # Name the host by its IP address
+      awx.awx.host:
+        name: "{{ switch_ip }}"
         description: "Auto-discovered via ZTP on {{ ansible_date_time.iso8601 }}"
         inventory: "{{ ztp_inventory_name }}"
         state: present
-        # enabled: true # Hosts are enabled by default
-        # --- AWX API Connection ---
-        # These are typically handled by assigning an 'Ansible Tower' or 'AWX'
-        # credential type to the Job Template in AWX.
-        # controller_host: "{{ tower_host | default(lookup('env', 'TOWER_HOST')) }}"
-        # controller_username: "{{ tower_username | default(lookup('env', 'TOWER_USERNAME')) }}"
-        # controller_password: "{{ tower_password | default(lookup('env', 'TOWER_PASSWORD')) }}"
-        # controller_oauthtoken: "{{ tower_oauthtoken | default(lookup('env', 'TOWER_OAUTH_TOKEN')) }}"
-        # validate_certs: "{{ tower_verify_ssl | default(true) }}"
       register: add_host_result
-      delegate_to: localhost # Ensure this runs locally on the AWX node
+      delegate_to: localhost
 
     - name: Display result of host addition
       ansible.builtin.debug:
