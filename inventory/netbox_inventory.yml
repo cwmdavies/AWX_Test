@@ -1,4 +1,4 @@
 plugin: netbox.netbox.nb_inventory
-api_endpoint: "{{ NETBOX_API }}"
-token: "{{ NETBOX_TOKEN }}"
+api_endpoint: "https://netbox.ads.muellergroup.com/api/"
+token: "89ddfe1e7425d7b1193d2fb3d22bf1f14fcc7fd0"
 validate_certs: false
