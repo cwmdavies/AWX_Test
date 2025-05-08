@@ -13,81 +13,20 @@
   # 'ztp_inventory_name' is the exact name of your ZTP inventory in AWX.
   vars:
     ztp_inventory_name: "ZTP Inventory"
-    switch_ip_address: "192.168.100.50"
 
   tasks:
-    - name: Check if switch_ip_address is provided and not empty
-      ansible.builtin.assert:
-        that:
-          - switch_ip_address is defined
-          - switch_ip_address | trim != ""  # Ensure it's not just an empty string or whitespace
-        fail_msg: "Mandatory extra variable 'switch_ip_address' was not provided or is empty. Please ensure it is passed correctly in the API call's extra_vars (e.g., {\"switch_ip_address\": \"1.2.3.4\"})."
-        quiet: true # Suppress "assertion passed" message for cleaner output if successful
-
-    - name: Ensure ztp_inventory_name is set and not empty
-      ansible.builtin.assert:
-        that:
-          - ztp_inventory_name is defined
-          - ztp_inventory_name | trim != ""
-        fail_msg: "Variable 'ztp_inventory_name' is not set or is empty. Please edit the playbook's vars section to provide the correct AWX inventory name."
-        quiet: true
-
-    - name: Determine AWX/Tower API endpoint from environment variables
-      ansible.builtin.set_fact:
-        resolved_controller_host: >-
-          {{
-            lookup('env', 'TOWER_HOST') |
-            default(lookup('env', 'CONTROLLER_HOST'), true) |
-            default(lookup('env', 'AWX_HOST'), true)
-          }}
-        resolved_controller_token: >-
-          {{
-            lookup('env', 'TOWER_OAUTH_TOKEN') |
-            default(lookup('env', 'CONTROLLER_OAUTH_TOKEN'), true) |
-            default(lookup('env', 'AWX_OAUTH_TOKEN'), true)
-          }}
-        resolved_validate_certs: >-
-          {{
-            (lookup('env', 'TOWER_VERIFY_SSL') |
-            default(lookup('env', 'CONTROLLER_VERIFY_SSL'), true) |
-            default(lookup('env', 'AWX_VERIFY_SSL'), true) |
-            default('true', true)) | bool
-          }}
-      run_once: true # Ensure this runs only once for the play
-
-    - name: Debug Resolved AWX Connection Parameters
-      ansible.builtin.debug:
-        msg: |
-          Resolved Controller Host: '{{ resolved_controller_host | default("NOT SET") }}'
-          Resolved Controller Token is SET: '{{ (resolved_controller_token | default("", true) | length > 0) | ternary("Yes", "No") }}'
-          Resolved Validate Certs: '{{ resolved_validate_certs }}'
-
-    - name: Assert controller_host is resolved and token is present
-      ansible.builtin.assert:
-        that:
-          - resolved_controller_host is defined
-          - resolved_controller_host | trim != ""
-          - resolved_controller_token is defined
-          - resolved_controller_token | trim != ""
-        fail_msg: >
-          Failed to determine AWX/Tower API host or token from environment variables
-          (TOWER_HOST/CONTROLLER_HOST/AWX_HOST, TOWER_OAUTH_TOKEN/CONTROLLER_OAUTH_TOKEN/AWX_OAUTH_TOKEN).
-          Please ensure these are set correctly in the AWX job environment (usually via an AWX Credential).
-          Current Host: '{{ resolved_controller_host | default("NOT SET") }}', Token Set: {{ (resolved_controller_token | default("", true) | length > 0) | ternary("Yes", "No") }}
-        quiet: true
-
     - name: Add the new switch IP to the ZTP inventory
       awx.awx.host: # Or ansible.tower.host depending on your collection/version
-        name: "{{ switch_ip_address }}"
+        name: "192.168.100.50"
         description: "Auto-discovered via ZTP on {{ now(utc=True, fmt='%Y-%m-%dT%H:%M:%SZ') }}"
-        inventory: "{{ ztp_inventory_name }}"
+        inventory: "ZTP Inventory"
         state: present
         enabled: true
 
         # --- AWX API Connection Parameters ---
-        controller_host: "{{ resolved_controller_host }}"
+        controller_host: "http://192.168.1.155:30443"
         controller_oauthtoken: "230jWOOiCLRPm1JxXnOyQ4UBIqZtMy"
-        validate_certs: "{{ resolved_validate_certs }}"
+        validate_certs: "false"
       register: add_host_result
       delegate_to: localhost
 
