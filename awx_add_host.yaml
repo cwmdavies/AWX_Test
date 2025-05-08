@@ -24,8 +24,8 @@
         enabled: true
 
         # --- AWX API Connection Parameters ---
-        controller_host: "http://192.168.1.155:30443"
-        controller_oauthtoken: "230jWOOiCLRPm1JxXnOyQ4UBIqZtMy"
+        controller_host: "{{ api_url }}"
+        controller_oauthtoken: "{{ api_token }}"
         validate_certs: "false"
       register: add_host_result
       delegate_to: localhost
