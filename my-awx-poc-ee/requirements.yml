@@ -3,3 +3,4 @@ collections:
   - name: ansible.posix
   - name: cisco.ios
   - name: netbox.netbox
+  - name: awx.awx
