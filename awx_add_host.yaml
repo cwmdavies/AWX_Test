@@ -1,12 +1,26 @@
 ---
+# Playbook: add_ztp_host.yml
+# Description: Adds a host to a specified AWX/Tower inventory.
+#              Designed to be triggered by a ZTP process, receiving the
+#              new switch's IP address via extra_vars.
+
 - name: Add ZTP Discovered Host to AWX Inventory
   hosts: localhost # Run this playbook on the AWX control node itself
-  gather_facts: false
+  gather_facts: false # Keep this false for efficiency on localhost
   connection: local
-  
+
+  # 'switch_ip_address' is expected to be provided via extra_vars when launching the job template.
+  # 'ztp_inventory_name' is the exact name of your ZTP inventory in AWX.
   vars:
     ztp_inventory_name: "ZTP Inventory"
     switch_ip_address: "192.168.100.50"
+
+    # The following AWX/Tower API connection details are typically injected by AWX
+    # when a credential of type 'Ansible Tower' or 'AWX' is assigned to the Job Template.
+    # The playbook will use these environment variables.
+    # tower_host: "{{ lookup('env', 'TOWER_HOST') }}" # Example, actual var names might vary slightly by AWX version
+    # tower_oauthtoken: "{{ lookup('env', 'TOWER_OAUTH_TOKEN') }}"
+    # tower_verify_ssl: "{{ lookup('env', 'TOWER_VERIFY_SSL') }}"
 
   tasks:
     - name: Check if switch_ip_address is provided and not empty
@@ -27,11 +41,22 @@
 
     - name: Add the new switch IP to the ZTP inventory
       awx.awx.host: # Or ansible.tower.host depending on your collection/version (e.g., for older AWX/Tower)
-        name: "{{ switch_ip_address }}"
+        name: "{{ switch_ip_address }}" # Use the extra_var directly
+        # Use Ansible's now() function for the timestamp, formatted as ISO 8601 UTC
         description: "Auto-discovered via ZTP on {{ now(utc=True, fmt='%Y-%m-%dT%H:%M:%SZ') }}"
         inventory: "{{ ztp_inventory_name }}"
         state: present
         enabled: true # Ensure the host is enabled by default
+
+        # --- AWX API Connection Parameters ---
+        # These parameters allow the module to use connection details provided by AWX
+        # environment variables, which are set when an 'Ansible Tower' or 'AWX'
+        # credential is assigned to the Job Template.
+        # Ensure your AWX credential provides an OAuth token for 'controller_oauthtoken'.
+        # If using username/password, adjust accordingly.
+        controller_host: "{{ lookup('env', 'TOWER_HOST') | default(lookup('env', 'CONTROLLER_HOST'), true) | default(lookup('env', 'AWX_HOST'), true) }}"
+        controller_oauthtoken: "{{ lookup('env', 'TOWER_OAUTH_TOKEN') | default(lookup('env', 'CONTROLLER_OAUTH_TOKEN'), true) | default(lookup('env', 'AWX_OAUTH_TOKEN'), true) }}"
+        validate_certs: "{{ lookup('env', 'TOWER_VERIFY_SSL') | default(lookup('env', 'CONTROLLER_VERIFY_SSL'), true) | default(lookup('env', 'AWX_VERIFY_SSL'), true) | default(true) }}"
       register: add_host_result
       delegate_to: localhost # Ensure this module runs locally on the AWX node
 
