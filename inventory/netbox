@@ -1,4 +1,3 @@
----
 plugin: netbox.netbox.nb_inventory
 api_endpoint: https://netbox.ads.muellergroup.com
 validate_certs: False
