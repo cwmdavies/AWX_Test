@@ -1,31 +1,39 @@
+---
 - name: Add ZTP Discovered Host to AWX Inventory
   hosts: localhost # Run this playbook on the AWX control node itself
   gather_facts: false
   connection: local
-
+  
   vars:
-    switch_ip: "192.168.100.50"
     ztp_inventory_name: "ZTP Inventory"
+    switch_ip_address: "192.168.100.50"
 
   tasks:
-    - name: Fail if switch_ip is not provided
-      ansible.builtin.fail:
-        msg: "Mandatory variable 'switch_ip_address' was not provided in extra_vars."
-      when: switch_ip is omitted or switch_ip == ""
+    - name: Check if switch_ip_address is provided and not empty
+      ansible.builtin.assert:
+        that:
+          - switch_ip_address is defined
+          - switch_ip_address | trim != ""  # Ensure it's not just an empty string or whitespace
+        fail_msg: "Mandatory extra variable 'switch_ip_address' was not provided or is empty. Please ensure it is passed correctly in the API call's extra_vars (e.g., {\"switch_ip_address\": \"1.2.3.4\"})."
+        quiet: true # Suppress "assertion passed" message for cleaner output if successful
 
-    - name: Ensure ztp_inventory_name is set
-      ansible.builtin.fail:
-        msg: "Variable 'ztp_inventory_name' is not set or is empty. Please edit the playbook vars section."
-      when: ztp_inventory_name is not defined or ztp_inventory_name == ""
+    - name: Ensure ztp_inventory_name is set and not empty
+      ansible.builtin.assert:
+        that:
+          - ztp_inventory_name is defined
+          - ztp_inventory_name | trim != ""
+        fail_msg: "Variable 'ztp_inventory_name' is not set or is empty. Please edit the playbook's vars section to provide the correct AWX inventory name."
+        quiet: true
 
     - name: Add the new switch IP to the ZTP inventory
-      awx.awx.host:
-        name: "{{ switch_ip }}"
+      awx.awx.host: # Or ansible.tower.host depending on your collection/version (e.g., for older AWX/Tower)
+        name: "{{ switch_ip_address }}"
         description: "Auto-discovered via ZTP on {{ ansible_date_time.iso8601 }}"
         inventory: "{{ ztp_inventory_name }}"
         state: present
+        enabled: true # Ensure the host is enabled by default
       register: add_host_result
-      delegate_to: localhost
+      delegate_to: localhost # Ensure this module runs locally on the AWX node
 
     - name: Display result of host addition
       ansible.builtin.debug:
