@@ -4,7 +4,3 @@ api_endpoint: https://netbox.ads.muellergroup.com
 validate_certs: False
 interfaces: true
 config_context: False
-group_by:
-  - device_roles
-device_query_filters:
-  - has_primary_ip: 'true'
