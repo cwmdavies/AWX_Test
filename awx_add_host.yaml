@@ -18,7 +18,7 @@
     # The following AWX/Tower API connection details are typically injected by AWX
     # when a credential of type 'Ansible Tower' or 'AWX' is assigned to the Job Template.
     # The playbook will use these environment variables.
-    # tower_host: "{{ lookup('env', 'TOWER_HOST') }}" # Example, actual var names might vary slightly by AWX version
+    # tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
     # tower_oauthtoken: "{{ lookup('env', 'TOWER_OAUTH_TOKEN') }}"
     # tower_verify_ssl: "{{ lookup('env', 'TOWER_VERIFY_SSL') }}"
 
@@ -53,10 +53,14 @@
         # environment variables, which are set when an 'Ansible Tower' or 'AWX'
         # credential is assigned to the Job Template.
         # Ensure your AWX credential provides an OAuth token for 'controller_oauthtoken'.
-        # If using username/password, adjust accordingly.
         controller_host: "{{ lookup('env', 'TOWER_HOST') | default(lookup('env', 'CONTROLLER_HOST'), true) | default(lookup('env', 'AWX_HOST'), true) }}"
         controller_oauthtoken: "{{ lookup('env', 'TOWER_OAUTH_TOKEN') | default(lookup('env', 'CONTROLLER_OAUTH_TOKEN'), true) | default(lookup('env', 'AWX_OAUTH_TOKEN'), true) }}"
-        validate_certs: "{{ lookup('env', 'TOWER_VERIFY_SSL') | default(lookup('env', 'CONTROLLER_VERIFY_SSL'), true) | default(lookup('env', 'AWX_VERIFY_SSL'), true) | default(true) }}"
+        # Ensure validate_certs results in a boolean:
+        # 1. Look up env vars TOWER_VERIFY_SSL, CONTROLLER_VERIFY_SSL, AWX_VERIFY_SSL in order.
+        # 2. The `default(..., true)` filter treats undefined or empty strings from lookup as needing the default.
+        # 3. If all are unset/empty, it defaults to the string 'true'.
+        # 4. The `| bool` filter converts the resulting string (e.g., 'true', 'false') to a proper boolean.
+        validate_certs: "{{ (lookup('env', 'TOWER_VERIFY_SSL') | default(lookup('env', 'CONTROLLER_VERIFY_SSL'), true) | default(lookup('env', 'AWX_VERIFY_SSL'), true) | default('true', true)) | bool }}"
       register: add_host_result
       delegate_to: localhost # Ensure this module runs locally on the AWX node
 
