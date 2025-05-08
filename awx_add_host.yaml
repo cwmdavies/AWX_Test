@@ -1,24 +1,20 @@
 ---
 - name: Add ZTP Discovered Host to AWX Inventory
-  hosts: localhost # Run this playbook on the AWX control node itself
-  gather_facts: false # Keep this false for efficiency on localhost
+  hosts: localhost
+  gather_facts: false
   connection: local
 
-  # 'switch_ip_address' is expected to be provided via extra_vars when launching the job template.
-  # 'ztp_inventory_name' is the exact name of your ZTP inventory in AWX.
   vars:
     ztp_inventory_name: "ZTP Inventory"
 
   tasks:
     - name: Add the new switch IP to the ZTP inventory
-      awx.awx.host: # Or ansible.tower.host depending on your collection/version
+      awx.awx.host:
         name: "192.168.100.50"
         description: "Auto-discovered via ZTP on {{ now(utc=True, fmt='%Y-%m-%dT%H:%M:%SZ') }}"
         inventory: "ZTP Inventory"
         state: present
         enabled: true
-
-        # --- AWX API Connection Parameters ---
         controller_host: "{{ lookup('env', 'AWX_API_URL') }}"
         controller_oauthtoken: "{{ lookup('env', 'AWX_OAUTH_TOKEN') }}"
         validate_certs: "false"
