@@ -1,5 +1,5 @@
 plugin: netbox.netbox.nb_inventory
-api_endpoint: {{ netbox_api }}
-token: {{ netbox_token }}
+api_endpoint: {{ NETBOX_API }}
+token: {{ NETBOX_TOKEN }}
 validate_certs: false
 config_context: false
