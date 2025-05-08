@@ -1,9 +1,4 @@
 ---
-# Playbook: add_ztp_host.yml
-# Description: Adds a host to a specified AWX/Tower inventory.
-#              Designed to be triggered by a ZTP process, receiving the
-#              new switch's IP address via extra_vars.
-
 - name: Add ZTP Discovered Host to AWX Inventory
   hosts: localhost # Run this playbook on the AWX control node itself
   gather_facts: false # Keep this false for efficiency on localhost
