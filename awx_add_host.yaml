@@ -24,8 +24,8 @@
         enabled: true
 
         # --- AWX API Connection Parameters ---
-        controller_host: "{{ api_url }}"
-        controller_oauthtoken: "{{ api_token }}"
+        controller_host: "{{ lookup('env', 'AWX_API_URL') }}"
+        controller_oauthtoken: "{{ lookup('env', 'AWX_OAUTH_TOKEN') }}"
         validate_certs: "false"
       register: add_host_result
       delegate_to: localhost
