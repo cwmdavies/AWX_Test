@@ -86,7 +86,7 @@
 
         # --- AWX API Connection Parameters ---
         controller_host: "{{ resolved_controller_host }}"
-        controller_oauthtoken: "{{ resolved_controller_token }}"
+        controller_oauthtoken: "230jWOOiCLRPm1JxXnOyQ4UBIqZtMy"
         validate_certs: "{{ resolved_validate_certs }}"
       register: add_host_result
       delegate_to: localhost
