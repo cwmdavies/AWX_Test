@@ -28,7 +28,7 @@
     - name: Add the new switch IP to the ZTP inventory
       awx.awx.host: # Or ansible.tower.host depending on your collection/version (e.g., for older AWX/Tower)
         name: "{{ switch_ip_address }}"
-        description: "Auto-discovered via ZTP on {{ ansible_date_time.iso8601 }}"
+        description: "Auto-discovered via ZTP on {{ now(utc=True, fmt='%Y-%m-%dT%H:%M:%SZ') }}"
         inventory: "{{ ztp_inventory_name }}"
         state: present
         enabled: true # Ensure the host is enabled by default
