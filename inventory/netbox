@@ -1,6 +1,6 @@
 plugin: netbox.netbox.nb_inventory
-api_endpoint: {{ NETBOX_API }}
-token: {{ NETBOX_TOKEN }}
+api_endpoint: {{ NETBOX_API_URL }}
+token: {{ NETBOX_API_TOKEN }}
 validate_certs: false
 config_context: false
 group_by:
