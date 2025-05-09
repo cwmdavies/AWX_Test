@@ -3,3 +3,7 @@ api_endpoint: {{ NETBOX_API }}
 token: {{ NETBOX_TOKEN }}
 validate_certs: false
 config_context: false
+group_by:
+  - site
+  - device_role
+  - tag
